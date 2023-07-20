@@ -1,6 +1,9 @@
 package duplicatefilefinder;
 
 import duplicatefilefinder.config.Config;
+import duplicatefilefinder.records.Files;
+
+import java.util.ArrayList;
 
 public class DuplicateFileFinder
 {
@@ -11,8 +14,8 @@ public class DuplicateFileFinder
         this.config = config;
     }
 
-    public void start()
+    public Files findDuplicateFiles()
     {
-        System.out.println("{ hashes: [] }");
+        return new Files(new ArrayList<>());
     }
 }
