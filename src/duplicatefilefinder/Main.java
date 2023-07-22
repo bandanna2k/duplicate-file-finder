@@ -3,7 +3,7 @@ package duplicatefilefinder;
 import duplicatefilefinder.config.Config;
 import duplicatefilefinder.config.ConfigBuilder;
 import duplicatefilefinder.progress.Progress;
-import duplicatefilefinder.records.ResultFiles;
+import duplicatefilefinder.records.Results;
 
 public class Main
 {
@@ -17,7 +17,7 @@ public class Main
     {
         System.out.printf("Searching '%s' for files.%n", config.searchFolder());
 
-        ResultFiles duplicateFiles = new DuplicateFileFinder(this::progressEvents, config).findDuplicateFiles();
+        Results duplicateFiles = new DuplicateFileFinder(this::progressEvents, config).findDuplicateFiles();
 
         System.out.println();
         System.out.println(duplicateFiles.toJson());

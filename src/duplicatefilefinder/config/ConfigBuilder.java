@@ -1,11 +1,15 @@
 package duplicatefilefinder.config;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigBuilder
 {
     private int minFilesFilter = 2;
     private Path searchFolder;
+    private final List<String> extensions = new ArrayList<>();
+    private String regex = ".*";
 
     public ConfigBuilder(final String[] args)
     {
@@ -19,6 +23,7 @@ public class ConfigBuilder
             final String arg = args[i];
             switch (arg) {
                 case "-min", "--minFiles" -> minFilesFilter = Integer.parseInt(args[++i]);
+                case "-i", "--include" -> extensions.add(args[++i]);
             }
         }
     }
@@ -40,6 +45,6 @@ public class ConfigBuilder
 
     public Config build()
     {
-        return new Config(minFilesFilter, searchFolder);
+        return new Config(minFilesFilter, searchFolder, extensions, regex);
     }
 }
