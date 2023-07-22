@@ -11,6 +11,8 @@ Finds duplicate files in a folder. Returns information in JSON format.
 `<options>` 
 
 `-min|--minFiles`  (default 2) Only return results greater or equal to this minimum
+`-i|--include`     Filter files also by extension (multiple includes allowed)
+`-r|--regex`       Filter files also by regex
 
 
 ## Output
@@ -36,3 +38,10 @@ Finds duplicate files in a folder. Returns information in JSON format.
   ]
 }
 ```
+
+
+# TODO 
+
+- Progress - average time
+- Progress - stats
+- Write output to file

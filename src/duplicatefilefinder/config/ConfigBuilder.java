@@ -24,6 +24,7 @@ public class ConfigBuilder
             switch (arg) {
                 case "-min", "--minFiles" -> minFilesFilter = Integer.parseInt(args[++i]);
                 case "-i", "--include" -> extensions.add(args[++i]);
+                case "-r", "--regex" -> regex = args[++i];
             }
         }
     }
