@@ -1,5 +1,10 @@
 package duplicatefilefinder.config;
 
-public record Config(int minFilesFilter)
+import java.nio.file.Path;
+
+public record Config(
+        int minFilesFilter,
+        Path searchFolder
+)
 {
 }
