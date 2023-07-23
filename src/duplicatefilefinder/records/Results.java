@@ -11,11 +11,7 @@ import java.util.*;
 public class Results {
     private transient final Map<String, HashRecord> hashToRecord = new HashMap<>();
     private transient final Map<String, String> files = new HashMap<>();
-    private final Set<HashRecord> hashes = new TreeSet<>((left, right) -> {
-        int sizeLeft = left.files().size();
-        int sizeRight = right.files().size();
-        return Integer.compare(sizeLeft, sizeRight);
-    });
+    private final Set<HashRecord> hashes = new HashSet<>();
 
     public String toJson() {
         return new Gson().toJson(this);
@@ -29,9 +25,8 @@ public class Results {
             hashRecord = hashToRecord.get(base64);
             hashRecord.add(absolutePath);
         } else {
-            ArrayList<String> list = new ArrayList<>();
-            list.add(absolutePath);
-            hashRecord = new HashRecord(base64, file.toFile().length(), list);
+            hashRecord = new HashRecord(base64, file.toFile().length());
+            hashRecord.add(absolutePath);
             hashToRecord.put(base64, hashRecord);
         }
 
@@ -39,8 +34,8 @@ public class Results {
         hashes.add(hashRecord);
     }
 
-    public Map<String, HashRecord> hashes() {
-        return hashToRecord;
+    public Collection<HashRecord> hashes() {
+        return hashes;
     }
 
     public Map<String, String> files() {

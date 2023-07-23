@@ -3,7 +3,6 @@ package dnt.duplicatefilefinder;
 import duplicatefilefinder.config.Config;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,6 +12,7 @@ public class TestConfigBuilder
     private String regex;
     private final Path path;
     private List<String> extensions = Collections.emptyList();
+    private int minFilesFilter;
 
     public TestConfigBuilder(Path path)
     {
@@ -21,7 +21,8 @@ public class TestConfigBuilder
 
     public Config build()
     {
-        return new Config(outputFile, 2, path, extensions, regex);
+        minFilesFilter = 2;
+        return new Config(outputFile, minFilesFilter, path, extensions, regex);
     }
 
     public TestConfigBuilder extensions(String... extensions)
@@ -38,6 +39,11 @@ public class TestConfigBuilder
     public TestConfigBuilder outputFile(Path outputFile)
     {
         this.outputFile = outputFile;
+        return this;
+    }
+
+    public TestConfigBuilder minFilesFilter(int minFilesFilter) {
+        this.minFilesFilter = minFilesFilter;
         return this;
     }
 }
