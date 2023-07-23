@@ -23,16 +23,7 @@ public class AllFilesTest extends TestBase {
     @Before
     public void setUp() throws IOException
     {
-        File dir1 = new File(path.toAbsolutePath() + File.separator + "dir1");
-        File dir2 = new File(path.toAbsolutePath() + File.separator + "dir2");
-        dir1.mkdir();
-        dir2.mkdir();
-
-        File file1a = new File(dir1 + File.separator + "file1a.txt");
-        File file1b = new File(dir1 + File.separator + "file1b.txt");
-
-        Files.write(file1a.toPath(), "data1a".getBytes(StandardCharsets.UTF_8));
-        Files.write(file1b.toPath(), "data1b".getBytes(StandardCharsets.UTF_8));
+        writeTestFiles1();
     }
 
     @Test

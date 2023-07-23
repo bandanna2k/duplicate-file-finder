@@ -8,12 +8,17 @@ Finds duplicate files in a folder. Returns information in JSON format.
 
 `<folder>` Root folder to search
 
+### Options 
+
 `<options>` 
 
-`-min|--minFiles`  (default 2) Only return results greater or equal to this minimum
-`-i|--include`     Filter files also by extension (multiple includes allowed)
-`-r|--regex`       Filter files also by regex
+`-o|--output-file` (compulsory) File to output to 
 
+`-min|--minFiles`  (default 2) Only return results greater or equal to this minimum
+
+`-i|--include`     Filter files also by extension (multiple includes allowed)
+
+`-r|--regex`       Filter files also by regex
 
 ## Output
 

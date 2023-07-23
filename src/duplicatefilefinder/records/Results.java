@@ -1,17 +1,21 @@
 package duplicatefilefinder.records;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonWriter;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class Results
-{
-    private final Map<String, List<String>> hashes = new HashMap<>();
+public class Results {
+    private transient final Map<String, HashRecord> hashToRecord = new HashMap<>();
     private transient final Map<String, String> files = new HashMap<>();
+    private final Set<HashRecord> hashes = new TreeSet<>((left, right) -> {
+        int sizeLeft = left.files().size();
+        int sizeRight = right.files().size();
+        return Integer.compare(sizeLeft, sizeRight);
+    });
 
     public String toJson() {
         return new Gson().toJson(this);
@@ -20,26 +24,60 @@ public class Results
     public void add(String base64, Path file) {
 
         String absolutePath = file.toFile().getAbsolutePath();
-        if(hashes.containsKey(base64))
-        {
-            List<String> files = hashes.get(base64);
-            files.add(absolutePath);
-        }
-        else
-        {
+        HashRecord hashRecord;
+        if (hashToRecord.containsKey(base64)) {
+            hashRecord = hashToRecord.get(base64);
+            hashRecord.add(absolutePath);
+        } else {
             ArrayList<String> list = new ArrayList<>();
             list.add(absolutePath);
-            hashes.put(base64, list);
+            hashRecord = new HashRecord(base64, file.toFile().length(), list);
+            hashToRecord.put(base64, hashRecord);
         }
 
         files.put(file.toAbsolutePath().toString(), base64);
+        hashes.add(hashRecord);
     }
 
-    public Map<String, List<String>> hashes() {
-        return hashes;
+    public Map<String, HashRecord> hashes() {
+        return hashToRecord;
     }
 
     public Map<String, String> files() {
         return files;
+    }
+
+    public void write(Writer writer) {
+        JsonWriter jsonWriter = new JsonWriter(writer);
+        try {
+            jsonWriter.beginObject();
+            jsonWriter.name("hashes");
+
+            jsonWriter.beginArray();
+            for (HashRecord v : hashes) {
+
+                jsonWriter.beginObject();
+                jsonWriter.name("md5").value(v.md5());
+                jsonWriter.name("fileSize").value(v.fileSize());
+                jsonWriter.name("files");
+
+                jsonWriter.beginArray();
+                for (String file : v.files()) {
+                    jsonWriter.value(file);
+                }
+                jsonWriter.endArray();
+
+                jsonWriter.endObject();
+                jsonWriter.flush();
+            }
+            jsonWriter.endArray();
+
+            jsonWriter.endObject();
+            jsonWriter.flush();
+
+            writer.write("\n");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -52,7 +52,7 @@ public class DuplicateFileFinder
                 {
                     byte[] data = Files.readAllBytes(file.toAbsolutePath());
                     byte[] hash = md5.digest(data);
-                    String base64 = Base64.getEncoder().encodeToString(hash);
+                    String base64 = Base64.getMimeEncoder().encodeToString(hash);
 
                     results.add(base64, file);
 
@@ -73,7 +73,7 @@ public class DuplicateFileFinder
         }
         catch(IOException e)
         {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return results;

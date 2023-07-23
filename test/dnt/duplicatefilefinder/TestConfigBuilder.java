@@ -9,6 +9,7 @@ import java.util.List;
 
 public class TestConfigBuilder
 {
+    private Path outputFile;
     private String regex;
     private final Path path;
     private List<String> extensions = Collections.emptyList();
@@ -20,7 +21,7 @@ public class TestConfigBuilder
 
     public Config build()
     {
-        return new Config(2, path, extensions, regex);
+        return new Config(outputFile, 2, path, extensions, regex);
     }
 
     public TestConfigBuilder extensions(String... extensions)
@@ -31,6 +32,12 @@ public class TestConfigBuilder
 
     public TestConfigBuilder regex(String regex) {
         this.regex = regex;
+        return this;
+    }
+
+    public TestConfigBuilder outputFile(Path outputFile)
+    {
+        this.outputFile = outputFile;
         return this;
     }
 }
