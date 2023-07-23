@@ -30,6 +30,10 @@ public class ConfigBuilder
                 case "-r", "--regex" -> regex = args[++i];
                 case "-o", "--output-file" -> {
                     File newFile = new File(args[++i]);
+                    if(newFile.exists())
+                    {
+                        throw new RuntimeException("Please choose a new output file.");
+                    }
                     outputFile = newFile.toPath();
                 }
             }

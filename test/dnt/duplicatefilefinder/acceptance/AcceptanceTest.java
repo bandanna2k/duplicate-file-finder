@@ -35,7 +35,7 @@ public class AcceptanceTest extends TestBase
     }
 
     @Test
-    public void name()
+    public void shouldStart()
     {
         Main main = new Main();
         main.start(config);
