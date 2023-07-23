@@ -1,12 +1,15 @@
 package dnt.duplicatefilefinder;
 
 import duplicatefilefinder.DuplicateFileFinder;
+import duplicatefilefinder.records.HashRecord;
 import duplicatefilefinder.records.Results;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,6 +31,11 @@ public class SortTest extends TestBase {
 
         assertThat(results.files().size()).isEqualTo(6);
         assertThat(results.hashes().size()).isEqualTo(3);
+
+        List<HashRecord> hashes = new ArrayList<>(results.hashes());
+        assertThat(hashes.get(0).files().size()).isEqualTo(3);
+        assertThat(hashes.get(1).files().size()).isEqualTo(2);
+        assertThat(hashes.get(2).files().size()).isEqualTo(1);
 
         System.out.println(results.toJson());
     }

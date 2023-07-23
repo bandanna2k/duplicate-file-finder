@@ -11,7 +11,8 @@ import java.util.*;
 public class Results {
     private transient final Map<String, HashRecord> hashToRecord = new HashMap<>();
     private transient final Map<String, String> files = new HashMap<>();
-    private final Set<HashRecord> hashes = new HashSet<>();
+    private transient final Set<HashRecord> hashesAsSet = new HashSet<>();
+    private final List<HashRecord> hashes = new ArrayList<>();
 
     public String toJson() {
         return new Gson().toJson(this);
@@ -31,10 +32,30 @@ public class Results {
         }
 
         files.put(file.toAbsolutePath().toString(), base64);
-        hashes.add(hashRecord);
+        hashesAsSet.add(hashRecord);
     }
 
-    public Collection<HashRecord> hashes() {
+    public void sort()
+    {
+        hashes.clear();
+        hashes.addAll(hashesAsSet);
+        hashes.sort((t1, t2) -> {
+            int size1 = t1.files().size();
+            int size2 = t2.files().size();
+            if(size1 < size2) return 1;
+            if(size1 > size2) return -1;
+
+            long fileSize1 = t1.fileSize();
+            long fileSize2 = t2.fileSize();
+            if(fileSize1 > fileSize2) return 1;
+            if(fileSize1 < fileSize2) return -1;
+
+            return 0;
+        });
+    }
+
+    public Collection<HashRecord> hashes()
+    {
         return hashes;
     }
 
@@ -49,7 +70,7 @@ public class Results {
             jsonWriter.name("hashes");
 
             jsonWriter.beginArray();
-            for (HashRecord v : hashes) {
+            for (HashRecord v : hashesAsSet) {
 
                 jsonWriter.beginObject();
                 jsonWriter.name("md5").value(v.md5());

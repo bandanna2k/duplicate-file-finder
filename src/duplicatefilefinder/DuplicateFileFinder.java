@@ -76,6 +76,8 @@ public class DuplicateFileFinder
             throw new RuntimeException(e);
         }
 
+        results.sort();
+
         return results;
     }
 
