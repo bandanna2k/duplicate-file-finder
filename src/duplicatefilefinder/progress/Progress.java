@@ -1,12 +1,7 @@
 package duplicatefilefinder.progress;
 
-public record Progress(
-        int fileCount,
-        String mostFrequentFile
-)
+import duplicatefilefinder.records.HashRecord;
+
+public record Progress(HashRecord hashRecord)
 {
-    @Override
-    public String toString() {
-        return String.format("Count: %d, Avg process time: %.2f, MFF: %s", fileCount, 1.2, mostFrequentFile);
-    }
 }

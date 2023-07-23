@@ -2,6 +2,7 @@ package duplicatefilefinder.records;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
+import duplicatefilefinder.progress.ProgressEvents;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -13,6 +14,12 @@ public class Results {
     private transient final Map<String, String> files = new HashMap<>();
     private transient final Set<HashRecord> hashesAsSet = new HashSet<>();
     private final List<HashRecord> hashes = new ArrayList<>();
+    private final ProgressEvents progressEvents;
+
+    public Results(ProgressEvents progressEvents)
+    {
+        this.progressEvents = progressEvents;
+    }
 
     public String toJson() {
         return new Gson().toJson(this);
@@ -31,12 +38,16 @@ public class Results {
             hashToRecord.put(base64, hashRecord);
         }
 
+        progressEvents.onHashRecord(hashRecord);
+
         files.put(file.toAbsolutePath().toString(), base64);
         hashesAsSet.add(hashRecord);
     }
 
     public void sort()
     {
+        progressEvents.onMessage("Sorting");
+
         hashes.clear();
         hashes.addAll(hashesAsSet);
         hashes.sort((t1, t2) -> {
@@ -52,6 +63,8 @@ public class Results {
 
             return 0;
         });
+
+        progressEvents.onMessage("Sorted");
     }
 
     public Collection<HashRecord> hashes()
@@ -64,6 +77,9 @@ public class Results {
     }
 
     public void write(Writer writer) {
+
+        progressEvents.onMessage("Writing");
+
         JsonWriter jsonWriter = new JsonWriter(writer);
         try {
             jsonWriter.beginObject();
@@ -95,5 +111,6 @@ public class Results {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        progressEvents.onMessage("Written");
     }
 }

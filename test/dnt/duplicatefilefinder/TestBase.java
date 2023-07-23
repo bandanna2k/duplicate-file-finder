@@ -2,6 +2,7 @@ package dnt.duplicatefilefinder;
 
 import duplicatefilefinder.progress.Progress;
 import duplicatefilefinder.progress.ProgressEvents;
+import duplicatefilefinder.records.HashRecord;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +14,13 @@ public class TestBase
 {
     protected static ProgressEvents progressEvents = new ProgressEvents() {
         @Override
-        public void onFileComplete(Progress progress) {
-            System.out.println(progress);
+        public void onHashRecord(HashRecord hashRecord) {
+            System.out.println(hashRecord);
+        }
+
+        @Override
+        public void onMessage(String message) {
+//            System.out.println(message);
         }
     };
     protected final Path path = getTempPath();

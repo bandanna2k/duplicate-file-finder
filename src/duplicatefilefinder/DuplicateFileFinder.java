@@ -1,27 +1,25 @@
 package duplicatefilefinder;
 
 import duplicatefilefinder.config.Config;
-import duplicatefilefinder.progress.Progress;
 import duplicatefilefinder.progress.ProgressEvents;
 import duplicatefilefinder.records.Results;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.DosFileAttributes;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.Base64;
 
 public class DuplicateFileFinder
 {
-    private final ProgressEvents progressEvents;
     private final Config config;
     private final MessageDigest md5;
     private final Results results;
 
     public DuplicateFileFinder(ProgressEvents progressEvents, Config config)
     {
-        this.progressEvents = progressEvents;
         this.config = config;
         try
         {
@@ -30,7 +28,7 @@ public class DuplicateFileFinder
         {
             throw new RuntimeException(e);
         }
-        results = new Results();
+        results = new Results(progressEvents);
     }
 
     public Results findDuplicateFiles()
@@ -38,13 +36,11 @@ public class DuplicateFileFinder
         Path root = config.searchFolder();
         FileVisitor<Path> fv = new SimpleFileVisitor<>()
         {
-            int fileCount = 0;
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
             {
-                if(!canContinue(file))
+                if(shouldFilterOut(file))
                 {
-                    // Filtered out.
                     return FileVisitResult.CONTINUE;
                 }
 
@@ -55,8 +51,6 @@ public class DuplicateFileFinder
                     String base64 = Base64.getMimeEncoder().encodeToString(hash);
 
                     results.add(base64, file);
-
-                    progressEvents.onFileComplete(new Progress(++fileCount, file.toString()));
 
                     return FileVisitResult.CONTINUE;
                 }
@@ -81,27 +75,39 @@ public class DuplicateFileFinder
         return results;
     }
 
-    private boolean canContinue(Path file)
+    private boolean shouldFilterOut(Path file)
     {
-        if(config.regex() != null && !file.toString().matches(config.regex()))
-        {
-            return false;
+        DosFileAttributes dfa;
+        try {
+            dfa = Files.readAttributes(file, DosFileAttributes.class);
+            if(dfa.isDirectory() || dfa.isSystem())
+            {
+                return true;
+            }
+        } catch (IOException e) {
+            // TODO: Could not read file
+            return true;
         }
 
-        if(config.extensions().isEmpty())
+        if(config.regex() != null && !file.toString().matches(config.regex()))
         {
             return true;
         }
 
-        boolean canContinue = false;
+        if(config.extensions().isEmpty())
+        {
+            return false;
+        }
+
+        boolean shouldFilterOut = true;
         for (String extension : config.extensions())
         {
             if(file.toString().endsWith(extension))
             {
-                canContinue = true;
+                shouldFilterOut = false;
                 break;
             }
         }
-        return canContinue;
+        return shouldFilterOut;
     }
 }

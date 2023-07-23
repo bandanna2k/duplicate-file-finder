@@ -1,6 +1,9 @@
 package duplicatefilefinder.progress;
 
+import duplicatefilefinder.records.HashRecord;
+
 public interface ProgressEvents
 {
-    void onFileComplete(Progress progress);
+    void onHashRecord(HashRecord hashRecord);
+    void onMessage(String message);
 }
