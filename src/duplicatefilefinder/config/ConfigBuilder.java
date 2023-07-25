@@ -3,7 +3,9 @@ package duplicatefilefinder.config;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ConfigBuilder
@@ -38,11 +40,6 @@ public class ConfigBuilder
                 }
             }
         }
-
-        if(outputFile == null)
-        {
-            throw new IllegalArgumentException("Output file must be set.");
-        }
     }
 
     private static Path getSearchFolder(String input) {
@@ -62,6 +59,14 @@ public class ConfigBuilder
 
     public Config build()
     {
+        Path outputFile = this.outputFile == null ? getNewFile().toPath() : this.outputFile;
         return new Config(outputFile, minFilesFilter, searchFolder, extensions, regex);
+    }
+
+    private File getNewFile()
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        File file = new File(String.format("dff.%s.json", sdf.format(new Date())));
+        return file;
     }
 }
