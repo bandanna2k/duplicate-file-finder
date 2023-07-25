@@ -12,13 +12,15 @@ Finds duplicate files in a folder. Returns information in JSON format.
 
 `<options>` 
 
-`-o|--output-file` (compulsory) File to output to 
+`-o|--output-file` File to output to. 
 
 `-min|--minFiles`  (default 2) Only return results greater or equal to this minimum
 
 `-i|--include`     Filter files also by extension (multiple includes allowed)
 
 `-r|--regex`       Filter files also by regex
+
+`-q|--quick`       Just MD5 the first 1000 bytes
 
 ## Output
 
@@ -47,6 +49,6 @@ Finds duplicate files in a folder. Returns information in JSON format.
 
 # TODO 
 
-- Progress - average time
-- Progress - stats
-- Write output to file
+- Show options used
+- Stream IO MD5
+- 

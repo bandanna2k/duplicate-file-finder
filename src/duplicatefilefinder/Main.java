@@ -19,7 +19,7 @@ public class Main
 
     public void start(Config config)
     {
-        System.out.printf("Searching '%s' for files.%n", config.searchFolder());
+        System.out.println(config);
 
         Results duplicateFiles = new DuplicateFileFinder(new ProgressEventsImpl(), config).findDuplicateFiles();
 

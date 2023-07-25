@@ -10,4 +10,15 @@ public record Config(
         List<String> extensions,
         String regex, boolean quick)
 {
+    @Override
+    public String toString() {
+        return "Config{" +
+                "outputFile=" + outputFile +
+                ", minFilesFilter=" + minFilesFilter +
+                ", searchFolder=" + searchFolder +
+                ", extensions=" + extensions +
+                ", regex='" + regex + '\'' +
+                ", quick=" + quick +
+                '}';
+    }
 }
