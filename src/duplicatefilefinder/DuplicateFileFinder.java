@@ -4,6 +4,8 @@ import duplicatefilefinder.config.Config;
 import duplicatefilefinder.progress.ProgressEvents;
 import duplicatefilefinder.records.Results;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -17,6 +19,8 @@ public class DuplicateFileFinder
     private final Config config;
     private final MessageDigest md5;
     private final Results results;
+
+    private byte[] buffer = new byte[1000];
 
     public DuplicateFileFinder(ProgressEvents progressEvents, Config config)
     {
@@ -48,7 +52,7 @@ public class DuplicateFileFinder
 
                 try
                 {
-                    byte[] data = Files.readAllBytes(file.toAbsolutePath());
+                    byte[] data = getReadBytes(file);
                     byte[] hash = md5.digest(data);
                     String base64 = Base64.getMimeEncoder().encodeToString(hash);
 
@@ -75,6 +79,17 @@ public class DuplicateFileFinder
         results.sort();
 
         return results;
+    }
+
+    private byte[] getReadBytes(Path file) throws IOException
+    {
+        if(config.quick() && file.toFile().length() > 1000)
+        {
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file.toFile()));
+            bis.read(buffer);
+            return buffer;
+        }
+        return Files.readAllBytes(file.toAbsolutePath());
     }
 
     private boolean shouldFilterOut(Path file)

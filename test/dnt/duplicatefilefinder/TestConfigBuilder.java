@@ -13,6 +13,7 @@ public class TestConfigBuilder
     private final Path path;
     private List<String> extensions = Collections.emptyList();
     private int minFilesFilter;
+    private boolean quick;
 
     public TestConfigBuilder(Path path)
     {
@@ -22,7 +23,7 @@ public class TestConfigBuilder
     public Config build()
     {
         minFilesFilter = 2;
-        return new Config(outputFile, minFilesFilter, path, extensions, regex);
+        return new Config(outputFile, minFilesFilter, path, extensions, regex, quick);
     }
 
     public TestConfigBuilder extensions(String... extensions)
@@ -44,6 +45,11 @@ public class TestConfigBuilder
 
     public TestConfigBuilder minFilesFilter(int minFilesFilter) {
         this.minFilesFilter = minFilesFilter;
+        return this;
+    }
+
+    public TestConfigBuilder quick() {
+        this.quick = true;
         return this;
     }
 }

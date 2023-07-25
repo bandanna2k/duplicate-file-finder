@@ -8,6 +8,6 @@ public record Config(
         int minFilesFilter,
         Path searchFolder,
         List<String> extensions,
-        String regex)
+        String regex, boolean quick)
 {
 }

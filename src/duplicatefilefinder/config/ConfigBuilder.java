@@ -10,6 +10,7 @@ import java.util.List;
 
 public class ConfigBuilder
 {
+    private boolean quick;
     private Path outputFile;
     private int minFilesFilter = 2;
     private Path searchFolder;
@@ -30,6 +31,7 @@ public class ConfigBuilder
                 case "-min", "--minFiles" -> minFilesFilter = Integer.parseInt(args[++i]);
                 case "-i", "--include" -> extensions.add(args[++i]);
                 case "-r", "--regex" -> regex = args[++i];
+                case "-q", "--quick" -> quick = true;
                 case "-o", "--output-file" -> {
                     File newFile = new File(args[++i]);
                     if(newFile.exists())
@@ -60,7 +62,7 @@ public class ConfigBuilder
     public Config build()
     {
         Path outputFile = this.outputFile == null ? getNewFile().toPath() : this.outputFile;
-        return new Config(outputFile, minFilesFilter, searchFolder, extensions, regex);
+        return new Config(outputFile, minFilesFilter, searchFolder, extensions, regex, quick);
     }
 
     private File getNewFile()

@@ -1,11 +1,13 @@
 package dnt.duplicatefilefinder;
 
 import duplicatefilefinder.DuplicateFileFinder;
+import duplicatefilefinder.records.HashRecord;
 import duplicatefilefinder.records.Results;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,5 +68,27 @@ public class Test extends TestBase
                 {"hashes":[{"md5":"eIBaIhqYjnnvP0LXxb/UGA==","fileSize":5,"files":["/tmp/""");
         assertThat(json).endsWith("""
                 /file1.bin"]}]}""");
+    }
+
+    @org.junit.Test
+    public void testQuickMode() throws IOException {
+        File file1001 = new File(path + File.separator + "file1001.speed");
+        FileOutputStream fos = new FileOutputStream(file1001);
+        for (int i = 0; i < 1001; i++) {
+            fos.write(0);
+        }
+        fos.flush();
+        fos.close();
+
+        final DuplicateFileFinder dffFast = new DuplicateFileFinder(progressEvents,
+                new TestConfigBuilder(path).extensions(".speed").quick().build());
+        final DuplicateFileFinder dffSlow = new DuplicateFileFinder(progressEvents,
+                new TestConfigBuilder(path).extensions(".speed").build());
+
+        Results resultsSlow = dffSlow.findDuplicateFiles();
+        Results resultsFast = dffFast.findDuplicateFiles();
+        String hashSlow = new ArrayList<>(resultsSlow.hashes()).get(0).md5();
+        String hashFast = new ArrayList<>(resultsFast.hashes()).get(0).md5();
+        assertThat(hashFast).isNotEqualTo(hashSlow);
     }
 }
