@@ -44,6 +44,8 @@ public class DuplicateFileFinder
                     return FileVisitResult.CONTINUE;
                 }
 
+                //try { Thread.sleep(1000); } catch (InterruptedException e) { throw new RuntimeException(e); }
+
                 try
                 {
                     byte[] data = Files.readAllBytes(file.toAbsolutePath());

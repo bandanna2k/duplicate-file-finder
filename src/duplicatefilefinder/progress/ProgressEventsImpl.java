@@ -2,12 +2,20 @@ package duplicatefilefinder.progress;
 
 import duplicatefilefinder.records.HashRecord;
 
+import java.sql.Time;
+import java.util.concurrent.TimeUnit;
+
 public class ProgressEventsImpl implements ProgressEvents
 {
+    private final long startTime;
     int fileCount = 0;
     int duplicateFileCount = 0;
 
     int maxFileCount = 0;
+
+    public ProgressEventsImpl() {
+        startTime = System.currentTimeMillis();
+    }
 
     @Override
     public void onHashRecord(HashRecord hashRecord)
@@ -28,7 +36,12 @@ public class ProgressEventsImpl implements ProgressEvents
                 maxFileCount = size;
             }
 
-            System.out.print(String.format("\rCount: %d, Duplicates: %d, Max duplicates: %d", fileCount, duplicateFileCount, maxFileCount));
+            long currentTime = System.currentTimeMillis();
+            long durationMillis = currentTime - startTime;
+            long durationSeconds = TimeUnit.SECONDS.convert(durationMillis, TimeUnit.MILLISECONDS);
+
+            System.out.print(String.format("\rCount: %d, Time taken: %ds, Duplicates: %d, Max duplicates: %d",
+                    fileCount, durationSeconds, duplicateFileCount, maxFileCount));
         }
     }
 
