@@ -5,6 +5,7 @@ import duplicatefilefinder.records.HashRecord;
 public class ProgressEventsImpl implements ProgressEvents
 {
     int fileCount = 0;
+    int duplicateFileCount = 0;
 
     int maxFileCount = 0;
 
@@ -13,13 +14,21 @@ public class ProgressEventsImpl implements ProgressEvents
     {
         fileCount++;
 
-        if(hashRecord.fileSize() != 0) {
+        boolean isEmptyFile = hashRecord.fileSize() == 0;
+        if(!isEmptyFile) {
+
+            boolean hasDuplicate = hashRecord.files().size() > 1;
+            if(hasDuplicate)
+            {
+               duplicateFileCount++;
+            }
+
             int size = hashRecord.files().size();
             if (size > maxFileCount) {
                 maxFileCount = size;
             }
 
-            System.out.print(String.format("\rCount: %d, Max duplicates: %d", fileCount, maxFileCount));
+            System.out.print(String.format("\rCount: %d, Duplicates: %d, Max duplicates: %d", fileCount, duplicateFileCount, maxFileCount));
         }
     }
 
