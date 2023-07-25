@@ -1,16 +1,16 @@
 package duplicatefilefinder.config;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.OptionalInt;
 
 public class ConfigBuilder
 {
-    private boolean quick;
+    private OptionalInt quickHashSize;
     private Path outputFile;
     private int minFilesFilter = 2;
     private Path searchFolder;
@@ -31,7 +31,7 @@ public class ConfigBuilder
                 case "-min", "--minFiles" -> minFilesFilter = Integer.parseInt(args[++i]);
                 case "-i", "--include" -> extensions.add(args[++i]);
                 case "-r", "--regex" -> regex = args[++i];
-                case "-q", "--quick" -> quick = true;
+                case "-q", "--quickHashSize" -> quickHashSize = OptionalInt.of(Integer.parseInt(args[++i]));
                 case "-o", "--output-file" -> {
                     File newFile = new File(args[++i]);
                     if(newFile.exists())
@@ -62,7 +62,7 @@ public class ConfigBuilder
     public Config build()
     {
         Path outputFile = this.outputFile == null ? getNewFile().toPath() : this.outputFile;
-        return new Config(outputFile, minFilesFilter, searchFolder, extensions, regex, quick);
+        return new Config(outputFile, minFilesFilter, searchFolder, extensions, regex, quickHashSize);
     }
 
     private File getNewFile()

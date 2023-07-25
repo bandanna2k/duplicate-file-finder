@@ -20,7 +20,7 @@ public class DuplicateFileFinder
     private final MessageDigest md5;
     private final Results results;
 
-    private byte[] buffer = new byte[1000];
+    private byte[] buffer;
 
     public DuplicateFileFinder(ProgressEvents progressEvents, Config config)
     {
@@ -33,6 +33,8 @@ public class DuplicateFileFinder
             throw new RuntimeException(e);
         }
         results = new Results(progressEvents);
+
+        if(config.quickHashSize().isPresent()) buffer = new byte[config.quickHashSize().getAsInt()];
     }
 
     public Results findDuplicateFiles()
@@ -83,11 +85,15 @@ public class DuplicateFileFinder
 
     private byte[] getReadBytes(Path file) throws IOException
     {
-        if(config.quick() && file.toFile().length() > 1000)
+        if(config.quickHashSize().isPresent())
         {
-            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file.toFile()));
-            bis.read(buffer);
-            return buffer;
+            int quickHashSize = config.quickHashSize().getAsInt();
+
+            if(file.toFile().length() > quickHashSize) {
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file.toFile()));
+                bis.read(buffer);
+                return buffer;
+            }
         }
         return Files.readAllBytes(file.toAbsolutePath());
     }

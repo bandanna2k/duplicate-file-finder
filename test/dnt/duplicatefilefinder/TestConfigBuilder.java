@@ -5,6 +5,7 @@ import duplicatefilefinder.config.Config;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.OptionalInt;
 
 public class TestConfigBuilder
 {
@@ -23,7 +24,7 @@ public class TestConfigBuilder
     public Config build()
     {
         minFilesFilter = 2;
-        return new Config(outputFile, minFilesFilter, path, extensions, regex, quick);
+        return new Config(outputFile, minFilesFilter, path, extensions, regex, OptionalInt.empty());
     }
 
     public TestConfigBuilder extensions(String... extensions)

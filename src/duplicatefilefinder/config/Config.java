@@ -2,13 +2,15 @@ package duplicatefilefinder.config;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.OptionalInt;
 
 public record Config(
         Path outputFile,
         int minFilesFilter,
         Path searchFolder,
         List<String> extensions,
-        String regex, boolean quick)
+        String regex,
+        OptionalInt quickHashSize)
 {
     @Override
     public String toString() {
@@ -18,7 +20,7 @@ public record Config(
                 ", searchFolder=" + searchFolder +
                 ", extensions=" + extensions +
                 ", regex='" + regex + '\'' +
-                ", quick=" + quick +
+                ", quickHashSize=" + quickHashSize +
                 '}';
     }
 }

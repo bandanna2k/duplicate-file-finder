@@ -49,6 +49,5 @@ Finds duplicate files in a folder. Returns information in JSON format.
 
 # TODO 
 
-- Show options used
 - Stream IO MD5
-- 
+- Output summary 
