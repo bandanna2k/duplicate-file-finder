@@ -86,7 +86,7 @@ public class Results {
             jsonWriter.name("hashes");
 
             jsonWriter.beginArray();
-            for (HashRecord v : hashesAsSet) {
+            for (HashRecord v : hashes) {
 
                 jsonWriter.beginObject();
                 jsonWriter.name("md5").value(v.md5());

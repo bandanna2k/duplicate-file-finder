@@ -5,8 +5,7 @@ import duplicatefilefinder.records.HashRecord;
 import duplicatefilefinder.records.Results;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +37,9 @@ public class SortTest extends TestBase {
         assertThat(hashes.get(2).files().size()).isEqualTo(1);
 
         System.out.println(results.toJson());
+
+        OutputStreamWriter osw = new OutputStreamWriter(System.out);
+        results.write(osw);
     }
 
     private void writeFiles(int count, String content)
