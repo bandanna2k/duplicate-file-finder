@@ -10,11 +10,11 @@ import java.util.OptionalInt;
 public class TestConfigBuilder
 {
     private Path outputFile;
-    private String regex;
+    private String regex = ".*";
     private final Path path;
     private List<String> extensions = Collections.emptyList();
-    private int minFilesFilter;
-    private boolean quick;
+    private int minFilesFilter = 1;
+    private OptionalInt quickHashSize = OptionalInt.empty();
 
     public TestConfigBuilder(Path path)
     {
@@ -23,8 +23,7 @@ public class TestConfigBuilder
 
     public Config build()
     {
-        minFilesFilter = 2;
-        return new Config(outputFile, minFilesFilter, path, extensions, regex, OptionalInt.empty());
+        return new Config(outputFile, minFilesFilter, path, extensions, regex, quickHashSize);
     }
 
     public TestConfigBuilder extensions(String... extensions)
@@ -49,8 +48,8 @@ public class TestConfigBuilder
         return this;
     }
 
-    public TestConfigBuilder quick() {
-        this.quick = true;
+    public TestConfigBuilder quickHashSize(int quickHashSize) {
+        this.quickHashSize = OptionalInt.of(quickHashSize);
         return this;
     }
 }

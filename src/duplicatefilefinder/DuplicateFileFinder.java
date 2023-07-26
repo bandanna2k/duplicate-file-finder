@@ -78,6 +78,8 @@ public class DuplicateFileFinder
             throw new RuntimeException(e);
         }
 
+        results.trimRecords(config.minFilesFilter());
+
         results.sort();
 
         return results;

@@ -81,7 +81,7 @@ public class Test extends TestBase
         fos.close();
 
         final DuplicateFileFinder dffFast = new DuplicateFileFinder(progressEvents,
-                new TestConfigBuilder(path).extensions(".speed").quick().build());
+                new TestConfigBuilder(path).extensions(".speed").quickHashSize(1000).build());
         final DuplicateFileFinder dffSlow = new DuplicateFileFinder(progressEvents,
                 new TestConfigBuilder(path).extensions(".speed").build());
 

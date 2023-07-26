@@ -113,4 +113,17 @@ public class Results {
         }
         progressEvents.onMessage("Written");
     }
+
+    public void trimRecords(int minFiles)
+    {
+        Iterator<HashRecord> iterator = hashesAsSet.iterator();
+        while(iterator.hasNext())
+        {
+            HashRecord hashRecord = iterator.next();
+            if(hashRecord.files().size() < minFiles)
+            {
+                iterator.remove();
+            }
+        }
+    }
 }

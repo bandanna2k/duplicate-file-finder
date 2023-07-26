@@ -1,23 +1,18 @@
 package dnt.duplicatefilefinder;
 
 import duplicatefilefinder.DuplicateFileFinder;
-import duplicatefilefinder.config.Config;
 import duplicatefilefinder.records.Results;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.List;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FiltersTest extends TestBase {
+public class MinCountTest extends TestBase {
 
     @Before
     public void setUp() throws IOException
@@ -34,39 +29,34 @@ public class FiltersTest extends TestBase {
             new File(dir1 + File.separator + "file1d.jpeg"),
             new File(dir1 + File.separator + "file1e.gif")
         };
-        Arrays.stream(files).forEach(file -> {
+        int i = 1;
+        for (File file : files) {
             try {
-                Files.writeString(file.toPath(), "image");
+                i *= 10;
+                Files.writeString(file.toPath(), "image" + i);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        });
+        }
     }
 
     @Test
-    public void noFilterNoFiles() {
+    public void testFilterHigherThanCount() {
         final DuplicateFileFinder duplicateFileFinder = new DuplicateFileFinder(progressEvents,
-                new TestConfigBuilder(path).regex("noFilter").build());
+                new TestConfigBuilder(path)
+                        .minFilesFilter(2).build());
 
         Results duplicateFiles = duplicateFileFinder.findDuplicateFiles();
-        assertThat(duplicateFiles.files().size()).isEqualTo(0);
+        assertThat(duplicateFiles.hashes().size()).isEqualTo(0);
     }
 
     @Test
-    public void test1Filter() {
+    public void testFilterLowerOrEqualThanCount() {
         final DuplicateFileFinder duplicateFileFinder = new DuplicateFileFinder(progressEvents,
-                new TestConfigBuilder(path).extensions(".jpg").build());
+                new TestConfigBuilder(path)
+                        .minFilesFilter(1).build());
 
         Results duplicateFiles = duplicateFileFinder.findDuplicateFiles();
-        assertThat(duplicateFiles.files().size()).isEqualTo(1);
-    }
-
-    @Test
-    public void testMultipleFilters() {
-        final DuplicateFileFinder duplicateFileFinder = new DuplicateFileFinder(progressEvents,
-                new TestConfigBuilder(path).extensions(".png", ".jpg", ".bin").build());
-
-        Results duplicateFiles = duplicateFileFinder.findDuplicateFiles();
-        assertThat(duplicateFiles.files().size()).isEqualTo(2);
+        assertThat(duplicateFiles.hashes().size()).isEqualTo(5);
     }
 }

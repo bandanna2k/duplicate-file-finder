@@ -51,3 +51,4 @@ Finds duplicate files in a folder. Returns information in JSON format.
 
 - Stream IO MD5
 - Output summary 
+- Compare file size also
