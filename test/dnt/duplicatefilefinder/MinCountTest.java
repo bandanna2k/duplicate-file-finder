@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.util.Arrays;
 
@@ -48,6 +49,9 @@ public class MinCountTest extends TestBase {
 
         Results duplicateFiles = duplicateFileFinder.findDuplicateFiles();
         assertThat(duplicateFiles.hashes().size()).isEqualTo(0);
+
+        OutputStreamWriter osw = new OutputStreamWriter(System.out);
+        duplicateFiles.write(osw);
     }
 
     @Test

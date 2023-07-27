@@ -50,6 +50,7 @@ public class Results {
 
         hashes.clear();
         hashes.addAll(hashesAsSet);
+        hashesAsSet.clear();
         hashes.sort((t1, t2) -> {
             int size1 = t1.files().size();
             int size2 = t2.files().size();

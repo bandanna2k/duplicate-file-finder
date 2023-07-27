@@ -2,11 +2,11 @@ package duplicatefilefinder.config;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.OptionalInt;
+
+import static common.Utilities.getNewFile;
 
 public class ConfigBuilder
 {
@@ -61,14 +61,7 @@ public class ConfigBuilder
 
     public Config build()
     {
-        Path outputFile = this.outputFile == null ? getNewFile().toPath() : this.outputFile;
+        Path outputFile = this.outputFile == null ? getNewFile("dff", "json").toPath() : this.outputFile;
         return new Config(outputFile, minFilesFilter, searchFolder, extensions, regex, quickHashSize);
-    }
-
-    private File getNewFile()
-    {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-        File file = new File(String.format("dff.%s.json", sdf.format(new Date())));
-        return file;
     }
 }
