@@ -1,23 +1,18 @@
 package resultprocessor;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static common.Utilities.getNewFile;
-import static common.Utilities.wrapFile;
-
 public class ResultListener implements ResultProcessor.Events {
-    private final File output = getNewFile("moves", "sh");
+
     private final InputStreamReader inputStreamReader = new InputStreamReader(System.in);
     private final BufferedReader reader = new BufferedReader(inputStreamReader);
-    private final BufferedWriter writer;
+    private final List<FileChooser> fileChoosers = new ArrayList<>();
 
-    public ResultListener() {
-        try {
-            this.writer = new BufferedWriter(new FileWriter(output));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public ResultListener(FileChooser... fileChoosers) {
+        this.fileChoosers.addAll(Arrays.asList(fileChoosers));
     }
 
     @Override
@@ -46,21 +41,26 @@ public class ResultListener implements ResultProcessor.Events {
             String chosenFile = files.get(choiceIndex);
             System.out.println(String.format("You chose %d: %s", choice, chosenFile));
 
-            for (int j = 0; j < files.size(); j++) {
-                String file = files.get(j);
-                if (j == choiceIndex) {
-                    writer.write("chmod 0444 " + wrapFile(file));
-                    writer.newLine();
-                    writer.flush();
-                } else {
-                    writer.write("mv " + wrapFile(file) + " " + wrapFile("XXX" + file));
-                    writer.newLine();
-                    writer.flush();
-                }
-            }
+            List<String> otherFiles = new ArrayList<>();
+            otherFiles.addAll(files);
+            otherFiles.remove(choiceIndex);
+
+            choseFile(chosenFile, files);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void choseFile(String chosenFile, List<String> otherFiles) {
+        synchronized (fileChoosers)
+        {
+            this.fileChoosers.forEach(fileChooser -> fileChooser.onFileChosen(chosenFile, otherFiles));
+        }
+    }
+
+    interface FileChooser
+    {
+        void onFileChosen(String chosenFile, List<String> otherFiles);
     }
 }

@@ -18,11 +18,13 @@ public class Main
         new Main(inputFile).start();
     }
 
-    public void start() {
-
+    public void start()
+    {
         try {
+            FileOperationsFileChooser fileOperationsFileChooser = new FileOperationsFileChooser();
+            ResultListener listener = new ResultListener(fileOperationsFileChooser);
             ResultProcessor resultProcessor = new ResultProcessor(
-                    new ResultListener());
+                    listener);
             FileReader reader = new FileReader(inputFile);
             resultProcessor.process(reader);
         } catch (IOException e) {
