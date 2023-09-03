@@ -1,12 +1,21 @@
 # DUPLICATE FILE FINDER
 
+## TODO
+
+- Stream IO MD5
+- Output summary
+- Compare file size also
+- 
 ## Usage
 
 Finds duplicate files in a folder. Returns information in JSON format.
 
-`find-duplicate-files <folder> <options>`
+`java -jar duplicate-file-finder.jar` (Runs Duplicate File Finder in the current directory)
 
-`<folder>` Root folder to search
+`java -jar duplicate-file-finder.jar -d photos` (Runs Duplicate File Finder in the given directory)
+
+`java -jar duplicate-file-finder.jar resultProcessor dff.json` (Runs the result processor on file dff.json)
+
 
 ### Options 
 
@@ -45,10 +54,3 @@ Finds duplicate files in a folder. Returns information in JSON format.
   ]
 }
 ```
-
-
-# TODO 
-
-- Stream IO MD5
-- Output summary 
-- Compare file size also
