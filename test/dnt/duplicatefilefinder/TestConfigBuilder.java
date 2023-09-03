@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.OptionalInt;
 
+import static duplicatefilefinder.config.Config.App.DuplicateFileFinder;
+
 public class TestConfigBuilder
 {
     private Path outputFile;
@@ -23,7 +25,7 @@ public class TestConfigBuilder
 
     public Config build()
     {
-        return new Config(outputFile, minFilesFilter, path, extensions, regex, quickHashSize);
+        return new Config(DuplicateFileFinder, null, outputFile, minFilesFilter, path, extensions, regex, quickHashSize);
     }
 
     public TestConfigBuilder extensions(String... extensions)

@@ -8,13 +8,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class AcceptanceTest extends TestBase
 {
